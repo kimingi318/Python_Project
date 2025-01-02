@@ -32,15 +32,22 @@ else:
                             return random.randint(min_value, max_value), random.choice(cardshape)
 
                         def specialCard():
-                            specialCard = ["A", "J", "Q", "K", "black joker", "red joker"]
+                            specialCard = ["A", "J", "Q", "K"]
                             cardshape = ["hearts", "diamonds", "clubs", "spades"]
                             return random.choice(specialCard), random.choice(cardshape)
 
+                        def jokerCard():
+                            jokerCard = ["black joker", "red joker"]
+                            return random.choice(jokerCard)
+
                         while True:
-                            if random.choice([True, False]):
+                            choice = random.choice([1, 2, 3])
+                            if choice == 1:
                                 card = cardNo()
-                            else:
+                            elif choice == 2:
                                 card = specialCard()
+                            else:
+                                card = jokerCard()
                             
                             if card not in cards_deck:
                                 cards_deck.append(card)
@@ -49,9 +56,10 @@ else:
                             
 
                     starting_card = pick()
-                    if (starting_card[0] == "black joker" or
-                         starting_card[0] == "red joker" or 
-                         starting_card[0] == "A" or 
+                    while starting_card == "black joker" or starting_card == "red joker":
+                        starting_card = pick()
+                    
+                    if (starting_card[0] == "A" or 
                          starting_card[0] == "J" or 
                          starting_card[0] == "Q" or 
                          starting_card[0] == "K" or 
@@ -64,103 +72,123 @@ else:
                         players_cards = [[pick() for _ in range(3)] for _ in range(players)]
                         
 
-                    while True:
-                        for player_idx in range(players):
-                            print("\nplayer number", player_idx + 1, "your initial card area : ", players_cards[player_idx])
+                        while True:
+                            for player_idx in range(players):
+                                print("\nplayer number", player_idx + 1, "your initial card area : ", players_cards[player_idx])
 
-                            while True:
-                                value = input("pick a card from the deck(y):  ")
-                                if value.lower() == "y":
-                                    picked = pick()
-                                    print("\nyou picked \n", picked)
-                                    players_cards[player_idx].append(picked)
-                                    print("your new card are : ", players_cards[player_idx])
-                                    break
-
-                                else:
-                                    print("You can only drop a card that either matches the shape or has the same number as the starting card")
-                                    dropped = input("Do you want to drop a card(y)?  ")
-                                    while dropped.lower() != "y":
-                                        print("its either you drop or pick a card")
+                                while True:
+                                    value = input("pick a card from the deck(y):  ")
+                                    if value.lower() == "y":
+                                        picked = pick()
+                                        print("\nyou picked \n", picked)
+                                        players_cards[player_idx].append(picked)
+                                        print("\nyour new card are : ", players_cards[player_idx])
+                                        print("\nstarting card is: ", starting_card)
                                         break
 
                                     else:
-                                        card = input("which card do you want to drop?  ")
-                                        crd = int(card) - 1
+                                        print("You can only drop a card that either matches the shape or has the same number as the starting card")
+                                        dropped = input("Do you want to drop a card(y)?  ")
+                                        while dropped.lower() != "y":
+                                            print("its either you drop or pick a card")
+                                            break
 
-                                        popped_card = players_cards[player_idx].pop(crd)
-                                        print("\nyou dropped card number\n", popped_card)
-                                        print("\nyour new cards are: \n", players_cards[player_idx])
-                                        starting_card = popped_card
-                                        print("\nstarting card is: ", starting_card)
-                                        
+                                        else:
+                                            card = input("which card do you want to drop?  ")
+                                            crd = int(card) - 1
 
-                                        if popped_card[0] == 2:
-                                            next_player_idx = (player_idx + 1) % players
-                                            print("player number", next_player_idx + 1, "you have to pick two cards from the deck\n You can only avoid this by dropping an A card\n")
-                                            A_card = input("Do you have an A card to drop(y)?  ")
-                                            if A_card.lower() == "y":
-                                                popped_card = input("Drop the A card number:  ")
-                                                popped_card = int(popped_card) - 1
-                                                if popped_card[0] == "A":
-                                                    popped_card = players_cards[next_player_idx].pop(popped_card)
-                                                    print("you have successfully avoided picking two cards")
-                                                    break
+                                            popped_card = players_cards[player_idx].pop(crd)
+                                            print("\nyou dropped card number\n", popped_card)
+                                            print("\nyour new cards are: \n", players_cards[player_idx])
+                                            starting_card = popped_card
+                                            print("\nstarting card is: ", starting_card)
+                                            
 
-                                            else:
-                                                for _ in range(2):
-                                                    picked = pick()
-                                                    players_cards[next_player_idx].append(picked)
-                                                    print("player number", next_player_idx + 1, "new cards are : ", players_cards[next_player_idx])
-                                        elif popped_card[0] == 3:
-                                            next_player_idx = (player_idx + 1) % players
-                                            print("player number", next_player_idx + 1, "you have to pick three cards from the deck\n You can only avoid this by dropping an A card\n")
-                                            A_card = input("Do you have an A card to drop(y)?  ")
-                                            if A_card.lower() == "y":
-                                                popped_card = input("Drop the A card number:  ")
-                                                popped_card = int(popped_card) - 1
-                                                if popped_card[0] == "A":
-                                                    popped_card = players_cards[next_player_idx].pop(popped_card)
-                                                    print("you have successfully avoided picking three cards")
-                                                    break
+                                            if popped_card[0] == 2:
+                                                next_player_idx = (player_idx + 1) % players
+                                                card_shape = popped_card[1]
+                                                print("player number", next_player_idx + 1, "you have to pick two cards from the deck\n You can only avoid this by dropping an A card\n")
+                                                print("\nplayer number", next_player_idx + 1, "your initial card area : ", players_cards[next_player_idx])
+                                                A_card = input("Do you have an A card to drop(y)?  ")
+                                                if A_card.lower() == "y":
+                                                    popped_card = input("Drop the A card number:  ")
+                                                    popped_card = int(popped_card) - 1
+                                                    if (popped_card[0] == "A" or popped_card[0] == 2 or (popped_card[0] == 3 and popped_card[1] == card_shape)):
+                                                        popped_card = players_cards[next_player_idx].pop(popped_card)
+                                                        print("you have successfully avoided picking two cards")
+                                                        break
 
-                                            else:
-                                                for _ in range(3):
-                                                    picked = pick()
-                                                    players_cards[next_player_idx].append(picked)
-                                                    print("player number", next_player_idx + 1, "new cards are : ", players_cards[next_player_idx])
-                                        elif popped_card[0] == "black joker" or popped_card[0] == "red joker":
-                                            next_player_idx = (player_idx + 1) % players
-                                            print("player number", next_player_idx + 1, "you have to pick five cards from the deck\n You can only avoid this by dropping a special A card(A spades)\n or  2 a cards\n")
-                                            A_card = input("Do you have a special A card or 2 A cards to drop(y)? \n ")
-                                            if A_card.lower() == "y":
-                                                popped_card = input("Drop the respective  card number:  ")
-                                                popped_card = int(popped_card) - 1
-                                                if popped_card[0] == "A" and popped_card[1] == "spades":
-                                                    popped_card = players_cards[next_player_idx].pop(popped_card)
-                                                    print("you have successfully avoided picking five cards")
-                                                    break
-                                            else:
-                                                for _ in range(5):
-                                                    picked = pick()
-                                                    players_cards[next_player_idx].append(picked)
-                                                    print("player number", next_player_idx + 1, "new cards are : ", players_cards[next_player_idx])
-                                        
-                                        elif popped_card[0] == 8 or popped_card[0] == "Q":
-                                            card_shape = popped_card[1]
-                                            # next_player_idx = (player_idx + 1) % players
-                                            print("player number", player_idx + 1, "The dropped can is a question card\nYou have to provide the answer by\n\t dropping a card as an answer which should be of same shape with question card\n\t  or  pick a card as the answer \n")
-                                            Answer = input("Do you have an Answer card to drop(y)?  ")
-                                            if A_card.lower() == "y":
-                                                popped_card = input("Drop the Answer card number:  ")
-                                                popped_card = int(popped_card) - 1
-                                                if popped_card[1] == card_shape:
-                                                    popped_card = players_cards[next_player_idx].pop(popped_card)
-                                                    print("you have successfully avoided picking the answer card")
-                                                    break
+                                                else:
+                                                    for _ in range(2):
+                                                        picked = pick()
+                                                        players_cards[next_player_idx].append(picked)
+                                                        print("player number", next_player_idx + 1, "new cards are : ", players_cards[next_player_idx])
+                                            elif popped_card[0] == 3:
+                                                next_player_idx = (player_idx + 1) % players
+                                                card_shape = popped_card[1]
+                                                print("player number", next_player_idx + 1, "you have to pick three cards from the deck\n You can only avoid this by dropping an A card\n")
+                                                print("\nplayer number", next_player_idx + 1, "your initial card area : ", players_cards[next_player_idx])
+                                                A_card = input("Do you have an A card to drop(y)?  ")
+                                                if A_card.lower() == "y":
+                                                    popped_card = input("Drop the A card number:  ")
+                                                    popped_card = int(popped_card) - 1
+                                                    if (popped_card[0] == "A" or popped_card[0] == 3 or (popped_card[0] == 2 and popped_card[1] == card_shape)):
+                                                        popped_card = players_cards[next_player_idx].pop(popped_card)
+                                                        print("you have successfully avoided picking three cards")
+                                                        break
 
-                                            else:
-                                                    picked = pick()
-                                                    players_cards[player_idx].append(picked)
-                                                    print("player number", player_idx + 1, "new cards are : ", players_cards[player_idx])
-                                        break
+                                                else:
+                                                    for _ in range(3):
+                                                        picked = pick()
+                                                        players_cards[next_player_idx].append(picked)
+                                                        print("player number", next_player_idx + 1, "new cards are : ", players_cards[next_player_idx])
+                                            elif popped_card[0] == "black joker" or popped_card[0] == "red joker":
+                                                next_player_idx = (player_idx + 1) % players
+                                                print("player number", next_player_idx + 1, "you have to pick five cards from the deck\n You can only avoid this by dropping a special A card(A spades)\n or  2 a cards\n")
+                                                print("\nplayer number", next_player_idx + 1, "your initial card area : ", players_cards[next_player_idx])
+                                                A_card = input("Do you have a special A card or 2 A cards to drop(y)? \n ")
+                                                if A_card.lower() == "y":
+                                                    popped_card = input("Drop the respective  card number:  ")
+                                                    popped_card = int(popped_card) - 1
+                                                    if popped_card[0] == "A" and popped_card[1] == "spades":
+                                                        popped_card = players_cards[next_player_idx].pop(popped_card)
+                                                        print("you have successfully avoided picking five cards")
+                                                        break
+                                                else:
+                                                    for _ in range(5):
+                                                        picked = pick()
+                                                        players_cards[next_player_idx].append(picked)
+                                                        print("player number", next_player_idx + 1, "new cards are : ", players_cards[next_player_idx])
+                                                        continue
+                                            
+                                            elif popped_card[0] == 8 or popped_card[0] == "Q":
+                                                print("player number", player_idx + 1, "The dropped can is a question card\nYou have to provide the answer by\n\t dropping a card as an answer which should be of same shape with question card\n\t  or  pick a card as the answer \n")
+                                                print("\nplayer number", player_idx + 1, "your initial card area : ", players_cards[player_idx])
+                                                Answer = input("Do you have an Answer card to drop(y)?  ")
+                                                if Answer.lower() == "y":
+                                                    popped_card = input("Drop the Answer card number:  ")
+                                                    popped_card = int(popped_card) - 1
+                                                    popped = players_cards[player_idx][popped_card]
+                                                    if( popped[1] == popped_card[1] or popped[0] == popped_card[0]):
+                                                        popped_card = players_cards[player_idx].pop(popped_card)
+                                                        print("you have successfully avoided picking the answer card")
+                                                        break
+
+                                                else:
+                                                        picked = pick()
+                                                        players_cards[player_idx].append(picked)
+                                                        print("player number", player_idx + 1, "new cards are : ", players_cards[player_idx])
+
+
+                                            elif popped_card[0] == "J":
+                                                player_idx = (player_idx + 2) % players
+                                                print("player number", player_idx + 1, "you have been skipped\n")
+                                                print("\nplayer number", player_idx + 1, "your initial card area : ", players_cards[player_idx])
+                                                continue
+                                            
+                                            elif popped_card[0] == "K":
+                                                print("The direction of the game has been reversed\n")
+                                                players_cards.reverse()
+                                                player_idx = players - player_idx - 1
+                                                break
+                                            break
