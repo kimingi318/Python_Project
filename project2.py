@@ -98,8 +98,7 @@ else:
                                             crd = int(card) - 1
 
                                             popped_card = players_cards[player_idx].pop(crd)
-                                            print("\nyou dropped card number\n", popped_card)
-                                            print("\nyour new cards are: \n", players_cards[player_idx])
+                                            print("\nyou dropped card number\n", popped_card,"\nyour new cards are: \n", players_cards[player_idx])
                                             starting_card = popped_card
                                             print("\nstarting card is: ", starting_card)
                                             
@@ -188,22 +187,21 @@ else:
                                                         continue
                                             
                                             elif popped_card[0] == 8 or popped_card[0] == "Q":
-                                                print("player number", player_idx + 1, "You've dropped question card,either drop or pick an answer card\n")
-                                                print("player number", player_idx + 1, "your initial card area : ", players_cards[player_idx])
+                                                print("player number", player_idx + 1, "You've dropped question card,either drop or pick an answer card\nYour initial card area: ", players_cards[player_idx])
                                                 Answer = input("\nDo you have an Answer card to drop(y)?  ")
+                                                card_shape = popped_card[1]
                                                 if Answer.lower() == "y":
                                                     card_index = input("Drop the Answer card number:  ")
                                                     popped_card = int(card_index) - 1
                                                     card_to_drop = players_cards[player_idx][popped_card]
                                                     while card_to_drop[0] == 'Q' or card_to_drop[0] == 8:
                                                         print("\nYou've dropped a question card. Provide or pick the answer\n")
-                                                        players_cards[player_idx].pop(card_index)
+                                                        players_cards[player_idx].pop(popped_card)
                                                         Answer = input("Do you have an Answer card to drop(y)?  ")
                                                         if Answer.lower() == "y":
-                                                            card_index = input("Drop the Answer card number:  ")
-                                                            card_index = int(card_index) - 1
+                                                            card_index = int(input("Drop the Answer card number:  ")) - 1
                                                             card_to_drop = players_cards[player_idx][card_index]
-                                                            if card_to_drop[1] == popped_card[1]:
+                                                            if card_to_drop[1] == card_shape[1]:
                                                               players_cards[player_idx].pop(card_index)
                                                               print("You have successfully dropped an answer card")
                                                               break
